@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>dr4x0n-sever</title>
+  <style>
+    body {
+      margin: 0;
+      padding: 0;
+      background: #000;
+      color: #0f0;
+      font-family: "Courier New", monospace;
+    }
+    .scanlines {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      background: repeating-linear-gradient(
+        to bottom,
+        rgba(0, 255, 0, 0.05) 0,
+        rgba(0, 255, 0, 0.05) 2px,
+        transparent 2px,
+        transparent 4px
+      );
+    }
+    .container {
+      padding: 40px;
+      text-align: center;
+    }
+    h1 {
+      font-size: 48px;
+      text-shadow: 0 0 10px #0f0;
+    }
+    .terminal-box {
+      max-width: 700px;
+      margin: 40px auto;
+      background: rgba(0, 20, 0, 0.6);
+      border: 1px solid #0f0;
+      padding: 20px;
+      border-radius: 8px;
+      box-shadow: 0 0 15px #0f0;
+      text-align: left;
+    }
+    .blink {
+      animation: blink 0.8s infinite;
+    }
+    @keyframes blink {
+      0% { opacity: 1; }
+      50% { opacity: 0; }
+      100% { opacity: 1; }
+    }
+  </style>
+</head>
+<body>
+  <div class="scanlines"></div>
+  <div class="container">
+    <h1>dr4x0n-sever</h1>
+    <div class="terminal-box" id="terminal"></div>
+  </div>
+
+  <!-- Site Builder Panel -->
+  <div class="auth-panel" style="margin-top:30px; text-align:center;">
+    <h2 style="color:#0f0; text-shadow:0 0 6px #0f0;">Login / Signup</h2>
+    <div id="auth-box" style="display:flex; gap:16px; justify-content:center; flex-wrap:wrap;">
+      <div style="background:rgba(0,10,0,0.6); padding:16px; border:1px solid #0f0; border-radius:8px; width:320px;">
+        <h3 style="margin-top:0;">Login</h3>
+        <input id="login-user" placeholder="Username" style="width:100%; padding:8px; margin-bottom:8px; background:#001200; color:#0f0; border:1px solid #0f0;" />
+        <input id="login-pass" placeholder="Password" type="password" style="width:100%; padding:8px; margin-bottom:8px; background:#001200; color:#0f0; border:1px solid #0f0;" />
+        <button onclick="doLogin()" style="width:100%; padding:10px; background:black; color:#0f0; border:1px solid #0f0;">Login</button>
+      </div>
+
+      <div style="background:rgba(0,10,0,0.6); padding:16px; border:1px solid #0f0; border-radius:8px; width:320px;">
+        <h3 style="margin-top:0;">Signup</h3>
+        <input id="signup-user" placeholder="Choose username" style="width:100%; padding:8px; margin-bottom:8px; background:#001200; color:#0f0; border:1px solid #0f0;" />
+        <input id="signup-pass" placeholder="Choose password" type="password" style="width:100%; padding:8px; margin-bottom:8px; background:#001200; color:#0f0; border:1px solid #0f0;" />
+        <button onclick="doSignup()" style="width:100%; padding:10px; background:black; color:#0f0; border:1px solid #0f0;">Signup</button>
+      </div>
+    </div>
+
+    <p style="max-width:900px; margin:14px auto; color:#8f8;">Eslatma: Bu front-end login tizimi — barcha ma'lumotlar brauzerda (localStorage) saqlanadi. Hech qanday server tomonida haqiqiy autentifikatsiya amalga oshirilmaydi. Adminga kirish uchun quyidagi login ishlaydi.</p>
+
+    <div id="admin-panel" style="display:none; max-width:900px; margin:18px auto; text-align:left; background:rgba(0,20,0,0.6); padding:16px; border:1px solid #0f0; border-radius:8px;">
+      <h3 style="margin-top:0;">Admin Dashboard</h3>
+      <p><strong>Welcome, admin.</strong></p>
+      <button onclick="openTerminalAsAdmin()" style="padding:8px 12px; background:black; color:#0f0; border:1px solid #0f0;">Open Simulated Kali Terminal</button>
+      <button onclick="logout()" style="padding:8px 12px; margin-left:8px; background:black; color:#0f0; border:1px solid #0f0;">Logout</button>
+      <div id="admin-info" style="margin-top:12px;"></div>
+    </div>
+  </div>
+
+  <style>
+    /* small responsive tweaks for auth panel */
+    @media (max-width:720px){
+      #auth-box{flex-direction:column; align-items:center}
+      .terminal-box{max-width:95%}
+      #preview{width:95%}
+    }
+  </style>
+  <div class="container" style="margin-top:40px;">
+    <h2 style="color:#0f0; text-shadow:0 0 6px #0f0;">Site Builder</h2>
+    <p>Quyidagi oynaga HTML yozing — va sayt pastda ishlaydi.</p>
+
+    <textarea id="builder" style="width:90%; height:200px; background:#001200; color:#0f0; border:1px solid #0f0; padding:10px; font-family:Courier New; border-radius:8px;"></textarea>
+
+    <br><br>
+    <button onclick="runSite()" style="padding:10px 20px; background:black; color:#0f0; border:1px solid #0f0; border-radius:8px; cursor:pointer;">Run Site</button>
+
+    <h3 style="margin-top:25px;">Natija:</h3>
+    <iframe id="preview" style="width:90%; height:300px; background:white; border:1px solid #0f0; border-radius:8px;"></iframe>
+  </div>
+
+<script>
+    const terminal = document.getElementById("terminal");
+    const lines = [
+      "[INIT] Starting dr4x0n-sever...",
+      "[OK] System online.",
+      "[SCAN] Checking environment...",
+      "[OK] Secure mode activated.",
+      "[BOOT] Loading interface...",
+      "[ACCESS] Welcome, operator." 
+    ];
+
+    let index = 0;
+
+    function typeLine() {
+      if (index < lines.length) {
+        let p = document.createElement("p");
+        p.textContent = lines[index];
+        terminal.appendChild(p);
+        index++;
+        setTimeout(typeLine, 700);
+      } else {
+        let cursor = document.createElement("span");
+        cursor.textContent = "_";
+        cursor.classList.add("blink");
+        terminal.appendChild(cursor);
+      }
+    }
+
+    typeLine();
+
+    // ---------- SITE BUILDER SCRIPT ----------
+    function runSite() {
+      const code = document.getElementById('builder').value;
+      const frame = document.getElementById('preview').contentWindow.document;
+      frame.open();
+      frame.write(code);
+      frame.close();
+    }
+
+    // ---------- AUTH / ADMIN (front-end only) ----------
+    // Predefined strong admin credentials (front-end simulation only)
+    const ADMIN_USER = 'admin_dr4x0n';
+    const ADMIN_PASS = 'Dr4x0n!X9#2025';
+
+    // Initialize localStorage user store if absent
+    if(!localStorage.getItem('dr4x0n_users')){
+      const init = { [ADMIN_USER]: ADMIN_PASS };
+      localStorage.setItem('dr4x0n_users', JSON.stringify(init));
+    }
+
+    function doSignup(){
+      const u = document.getElementById('signup-user').value.trim();
+      const p = document.getElementById('signup-pass').value;
+      if(!u || !p){ alert('Username va passwordni kiriting.'); return; }
+      const store = JSON.parse(localStorage.getItem('dr4x0n_users') || '{}');
+      if(store[u]){ alert('Bu username allaqachon mavjud.'); return; }
+      store[u] = p;
+      localStorage.setItem('dr4x0n_users', JSON.stringify(store));
+      alert('Signup muvaffaqiyatli! Endi login qiling.');
+      document.getElementById('signup-user').value=''; document.getElementById('signup-pass').value='';
+    }
+
+    function doLogin(){
+      const u = document.getElementById('login-user').value.trim();
+      const p = document.getElementById('login-pass').value;
+      if(!u || !p){ alert('Username va passwordni kiriting.'); return; }
+      const store = JSON.parse(localStorage.getItem('dr4x0n_users') || '{}');
+      if(store[u] && store[u] === p){
+        // success
+        alert('Login muvaffaqiyatli. Welcome, ' + u);
+        // show admin panel only for admin user
+        if(u === ADMIN_USER){
+          document.getElementById('admin-panel').style.display = 'block';
+          document.getElementById('admin-info').innerHTML = '<p><strong>Admin access granted.</strong></p>';
+          document.getElementById('auth-box').style.display = 'none';
+        } else {
+          document.getElementById('admin-panel').style.display = 'none';
+          document.getElementById('auth-box').style.display = 'none';
+          const info = document.createElement('div');
+          info.style.marginTop = '12px';
+          info.style.color = '#afa';
+          info.innerHTML = '<p>Foydalanuvchi sifatida tizimga kirdingiz — admin terminalga kira olmaysiz.</p>';
+          document.querySelector('.auth-panel').appendChild(info);
+        }
+      } else {
+        alert('Login yoki parol noto'g'ri.');
+      }
+    }
+
+    function logout(){
+      document.getElementById('admin-panel').style.display = 'none';
+      document.getElementById('auth-box').style.display = 'flex';
+      // remove any dynamic info
+      const infos = document.querySelectorAll('.auth-panel > div:last-child > div');
+      if(infos) for(const el of infos) el.remove();
+    }
+
+    function openTerminalAsAdmin(){
+      // reveal terminal and inject admin greeting
+      const t = document.getElementById('terminal');
+      const adminLine = document.createElement('p');
+      adminLine.innerHTML = '[ADMIN] root@dr4x0n:~# Welcome back, operator.';
+      t.appendChild(adminLine);
+      // scroll into view
+      adminLine.scrollIntoView({behavior:'smooth'});
+      // reveal a simulated prompt
+      const cursor = document.createElement('span');
+      cursor.textContent = '
+root@dr4x0n:~# _';
+      cursor.classList.add('blink');
+      t.appendChild(cursor);
+    }
+
+    // End of script replacements
+
+    // ---------- SITE BUILDER SCRIPT ----------
+    function runSite() {
+      const code = document.getElementById('builder').value;
+      const frame = document.getElementById('preview').contentWindow.document;
+      frame.open();
+      frame.write(code);
+      frame.close();
+    }
+  </script>
+</body>
+</html>
