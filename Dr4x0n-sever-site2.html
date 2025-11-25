@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>dr4x0n-server</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: monospace;
+      background: #000;
+      color: #0f0;
+    }
+    .center {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      flex-direction: column;
+    }
+    input {
+      padding: 8px;
+      background: #111;
+      border: 1px solid #0f0;
+      color: #0f0;
+      width: 220px;
+      margin-top: 8px;
+    }
+    button {
+      padding: 8px 16px;
+      background: #060;
+      border: 1px solid #0f0;
+      color: #0f0;
+      cursor: pointer;
+      margin-top: 10px;
+    }
+    #terminal {
+      width: 100%;
+      height: 100vh;
+      background: #000;
+      border-top: 2px solid #0f0;
+      padding: 10px;
+      overflow-y: auto;
+      display: none;
+    }
+    #termInput {
+      width: 100%;
+      background: #000;
+      border: none;
+      color: #0f0;
+      font-family: monospace;
+      font-size: 16px;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- LOGIN PAGE -->
+  <div id="loginPage" class="center">
+    <h1 style="color:#0f0;">dr4x0n-server login</h1>
+    <input id="user" placeholder="username" />
+    <input id="pass" type="password" placeholder="password" />
+    <button onclick="login()">LOGIN</button>
+  </div>
+
+  <!-- TERMINAL PAGE -->
+  <div id="terminal">
+    <div id="termOutput"></div>
+    <span>> </span><input id="termInput" autocomplete="off" />
+  </div>
+
+  <script>
+    const ADMIN_USER = "admin_dr4x0n";
+    const ADMIN_PASS = "Dr4x0n!X9#2025";
+
+    function login() {
+      const u = document.getElementById("user").value;
+      const p = document.getElementById("pass").value;
+
+      if (u === ADMIN_USER && p === ADMIN_PASS) {
+        document.getElementById("loginPage").style.display = "none";
+        document.getElementById("terminal").style.display = "block";
+      } else {
+        alert("Noto'g'ri parol yoki user!");
+      }
+    }
+
+    const termInput = document.getElementById("termInput");
+    const termOutput = document.getElementById("termOutput");
+
+    termInput.addEventListener("keydown", function(e) {
+      if (e.key === "Enter") {
+        const cmd = termInput.value.trim();
+        print(`> ${cmd}`);
+        runCommand(cmd);
+        termInput.value = "";
+      }
+    });
+
+    function print(text) {
+      termOutput.innerHTML += text + "<br>";
+      termOutput.scrollTop = termOutput.scrollHeight;
+    }
+
+    function runCommand(cmd) {
+      if (cmd === "help") {
+        print("AVAILABLE COMMANDS:");
+        print("help — buyruqlar ro'yxati");
+        print("nmap 127.0.0.1 — soxta nmap natija");
+        print("clear — terminalni tozalaydi");
+        return;
+      }
+
+      if (cmd.startsWith("nmap")) {
+        print("Simulated Nmap Scan: 127.0.0.1");
+        print("PORT  80/tcp   open   http");
+        print("PORT  443/tcp  open   https");
+        print("PORT  22/tcp   open   ssh");
+        print("Scan finished.");
+        return;
+      }
+
+      if (cmd === "clear") {
+        termOutput.innerHTML = "";
+        return;
+      }
+
+      print("Unknown command: " + cmd);
+    }
+  </script>
+</body>
+</html>
