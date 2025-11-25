@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DR4X0N Server Login</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body class="login-body">
+
+<div class="login-box">
+    <h2>DR4X0N SERVER</h2>
+    <form onsubmit="return login(event)">
+        <input id="user" type="text" placeholder="Username" required>
+        <input id="pass" type="password" placeholder="Password" required>
+        <button type="submit">Login</button>
+    </form>
+</div>
+
+<script>
+function login(e){
+    e.preventDefault();
+    let u = document.getElementById("user").value;
+    let p = document.getElementById("pass").value;
+
+    // Kuchli login (sen uchun maxfiy)
+    if(u === "dr4x0n-admin" && p === "X9!gA7#k4L@92") {
+        window.location = "dashboard.html";
+    } else {
+        alert("❌ Not allowed");
+    }
+}
+</script>
+
+</body>
+</html>
