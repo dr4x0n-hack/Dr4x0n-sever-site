@@ -1,0 +1,107 @@
+body {
+    margin: 0;
+    background: #000;
+    color: #0f0;
+    font-family: monospace;
+}
+
+/* Login */
+.login-body {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+}
+
+.login-box {
+    background: #111;
+    padding: 25px;
+    border: 2px solid #0f0;
+    text-align: center;
+    width: 300px;
+    border-radius: 6px;
+}
+
+.login-box input {
+    width: 90%;
+    margin: 8px;
+    padding: 8px;
+    background: #000;
+    border: 1px solid #0f0;
+    color: #0f0;
+}
+
+.login-box button {
+    width: 95%;
+    padding: 10px;
+    background: #0f0;
+    border: none;
+    color: #000;
+    cursor: pointer;
+}
+
+/* Dashboard */
+.dashboard-body {
+    display: flex;
+}
+
+.sidebar {
+    width: 220px;
+    background: #111;
+    height: 100vh;
+    padding: 15px;
+    border-right: 2px solid #0f0;
+}
+
+.sidebar a {
+    color: #0f0;
+    display: block;
+    margin: 10px 0;
+    text-decoration: none;
+    padding: 8px;
+    border: 1px solid #0f0;
+}
+
+.content {
+    padding: 20px;
+    width: 100%;
+}
+
+.page {
+    display: none;
+}
+
+.page.shown {
+    display: block;
+}
+
+.lab-list {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+}
+
+.lab-item {
+    border: 1px solid #0f0;
+    padding: 10px;
+    text-decoration: none;
+    color: #0f0;
+}
+
+/* Terminal */
+.terminal-box {
+    width: 100%;
+    height: 300px;
+    background: #000;
+    border: 1px solid #0f0;
+    padding: 10px;
+    overflow-y: auto;
+}
+
+.terminal-input {
+    width: 100%;
+    padding: 10px;
+    background: #000;
+    color: #0f0;
+    border: 1px solid #0f0;
+}
