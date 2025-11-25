@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>DR4X0N Admin Panel</title>
+<link rel="stylesheet" href="assets/style.css">
+<script src="assets/dashboard.js" defer></script>
+</head>
+<body class="dashboard-body">
+
+<div class="sidebar">
+    <h2>DR4X0N</h2>
+    <a href="#" onclick="openPage('welcome')">Dashboard</a>
+    <a href="#" onclick="openPage('labs')">Offensive Labs</a>
+    <a href="#" onclick="openPage('files')">File Manager</a>
+    <a href="#" onclick="openPage('terminal')">Terminal Sim</a>
+</div>
+
+<div class="content">
+    <div id="welcome" class="page shown">
+        <h1>Welcome Admin</h1>
+        <p>System status: OK</p>
+        <p>Mode: Offensive Training</p>
+    </div>
+
+    <div id="labs" class="page">
+        <h1>Offensive Cybersecurity Labs</h1>
+        <div class="lab-list">
+            <a href="labs/sql.html" class="lab-item">SQL Injection Lab</a>
+            <a href="labs/xss.html" class="lab-item">XSS Lab</a>
+            <a href="labs/upload.html" class="lab-item">Upload Vulnerability Lab</a>
+            <a href="labs/weakauth.html" class="lab-item">Weak Authentication Lab</a>
+            <a href="labs/cmd.html" class="lab-item">Command Injection Lab</a>
+        </div>
+    </div>
+
+    <div id="files" class="page">
+        <h1>File Manager</h1>
+        <p>(Fake) No real files stored.</p>
+    </div>
+
+    <div id="terminal" class="page">
+        <h1>Terminal Simulator</h1>
+        <div class="terminal-box" id="terminalBox"></div>
+        <input class="terminal-input" id="termInput" placeholder="> command" onkeydown="runCmd(event)">
+    </div>
+</div>
+
+</body>
+</html>
