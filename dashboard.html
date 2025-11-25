@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard</title>
+  <link rel="stylesheet" href="assets/css/main.css">
+</head>
+<body>
+  <h1 class="title">dr4x0n Control Panel</h1>
+
+  <div class="menu">
+    <a href="terminal.html">Terminal</a>
+    <a href="admin.html">Admin Panel</a>
+    <a href="files.html">File Manager</a>
+    <a href="#" onclick="logout()">Log out</a>
+  </div>
+
+  <script>
+    function logout(){
+      localStorage.removeItem("logged");
+      window.location='index.html';
+    }
+  </script>
+</body>
+</html>
